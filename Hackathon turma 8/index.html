@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Hackathon</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/estilos.css" rel="stylesheet">
+
+  </head>
+  <body>
+  <img src= "img/hacka.png">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h2></h2>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <table id="bookTable" class="table table-bordered table-condensed table-striped">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Àrea de Atuação</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+
+        <div class="col-md-6">
+          <div class="panel panel-primary">
+            <div class="panel-heading">Dados</div>
+            <div class="panel-body">
+              <form>
+                <div class="form-group">
+                  <label for="title">Nome</label>
+                  <input type="text" name="nome" id="book_title" class="form-control input-lg" placeholder="Nome completo">
+                </div>
+
+                <div class="form-group">
+                  <label for="author">Email</label>
+                  <input type="text" name="email" id="book_author" class="form-control input-lg" placeholder="Email">
+                </div>
+
+                <div class="form-group">
+                  <label for="publisher">Àrea de atuação</label>
+                  <input type="text" name="publisher" id="book_publisher" class="form-control input-lg" placeholder="Àrea de atuação">
+                </div>
+
+                <div class="form-group">
+                  <button type="button" id="updateButton" onclick="bookUpdate();" class="btn btn-lg btn-primary">
+                    Adicionar Participante
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="js/jquery-2.2.2.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+     
+      var _nextId = 1;
+      
+      var _activeId = 0;
+
+      function formClear(){
+        $("#book_title").val("");
+        $("#book_author").val("");
+        $("#book_publisher").val("");
+      }
+
+      function bookBuildTableRow(id){
+        var row = "<tr>" +
+          "<td>" + $("#book_title").val() + "</td>" +
+          "<td>" + $("#book_author").val() + "</td>" +
+          "<td>" + $("#book_publisher").val() + "</td>" +
+          "<td>" +
+            "<button type='button' " +
+              "onclick='bookDisplay(this);' " +
+              "class='btn btn-default'" +
+              "data-id='" + id + "'>" +
+              "<span class='glyphicon glyphicon-edit'></span>" +
+            "</button>" +
+          "</td>" +
+          "<td>" +
+            "<button type='button' " +
+              "onclick='bookDelete(this);' " +
+              "class='btn btn-default'" +
+              "data-id='" + id + "'>" +
+              "<span class='glyphicon glyphicon-remove'></span>" +
+            "</button>" +
+          "</td>" +
+        "</tr>"
+
+        return row;
+      }
+
+      function bookAddToTable(){
+        
+        if ($("#bookTable tbody").length == 0){
+          $("#bookTable").append("<tbody></tbody>");
+        }
+
+        
+        $("#bookTable tbody").append(bookBuildTableRow(_nextId));
+
+        
+        _nextId += 1;
+      }
+
+      function bookDelete(button_delete){
+        $(button_delete).parents("tr").remove();
+      }
+
+      function bookDisplay(button_edit){
+        var row = $(button_edit).parents("tr");
+        var cols = row.children("td");
+
+        _activeId = $($(cols[3]).children("button")[0]).data("id");
+
+        $("#book_title").val($(cols[0]).text());
+        $("#book_author").val($(cols[1]).text());
+        $("#book_publisher").val($(cols[2]).text());
+
+        $("#updateButton").text("Actualizar");
+      }
+
+      function bookUpdateInTable(id){
+        var row = $("#bookTable button[data-id='" + id + "']").parents("tr")[0];
+
+        $(row).after(bookBuildTableRow());
+
+        $(row).remove();
+
+        formClear();
+
+        $("#updateButton").text("Adicionar Livro");
+      }
+
+      function bookUpdate(){
+        if ($("#book_title").val() != null && $("#book_title").val() != ''){
+          if ($("#updateButton").text() == "Actualizar"){
+            bookUpdateInTable(_activeId);
+          } else {
+            bookAddToTable();
+          }
+
+          formClear();
+
+          $("#book_title").focus();
+        }
+      }
+
+    </script>
+  </body>
+    <img src="img/patrocinio.png"/>
+</div>
+</html>
